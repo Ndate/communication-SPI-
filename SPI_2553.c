@@ -1,10 +1,10 @@
 #include <msp430.h>
 #include "SPI_2553.h"
-#include "UART_2553.h"
 
-#define SCK         BIT5            // Serial Clock
-#define DATA_OUT    BIT6            // DATA out
-#define DATA_IN     BIT7            // DATA in
+int val = 0;
+#define SCK         BIT4            // Serial Clock
+#define DATA_OUT    BIT1            // DATA out
+#define DATA_IN     BIT2            // DATA in
 #define CMDLEN  10
 
 
@@ -40,7 +40,7 @@ void init_USCI( void )
     // UCMODE_x  x=0 -> 3-pin SPI,
     //           x=1 -> 4-pin SPI UC0STE active high,
     //           x=2 -> 4-pin SPI UC0STE active low,
-    //           x=3 -> i²c.
+    //           x=3 -> iÂ²c.
     // UCSYNC = 1 -> Mode synchrone (SPI)
     UCB0CTL0 |= ( UCMST | UCMODE_0 | UCSYNC );
     UCB0CTL0 &= ~( UCCKPH | UCCKPL | UCMSB | UC7BIT );
@@ -62,13 +62,13 @@ void init_USCI( void )
 /*********************************************************************************************************
  * Fonction Send_char_SPI
  *
- * Elle permet d'envoyer un caractère pour le Slave - MSP430G2231 via la communication SPI
+ * Elle permet d'envoyer un caractÃ¨re pour le Slave - MSP430G2231 via la communication SPI
  ********************************************************************************************************/
 void Send_char_SPI(unsigned char carac)
 {
     unsigned char cmd[CMDLEN];  // tableau de caracteres lie a la commande user
     while ((UCB0STAT & UCBUSY));   // attend que USCI_SPI soit dispo.
     while(!(IFG2 & UCB0TXIFG)); // p442
-    UCB0TXBUF = carac;              // Put character in transmit buffer
+    UCB0TXBUF = 0xAA;              // Put character in transmit buffer
     envoi_msg_UART((unsigned char *)cmd);	// slave echo
 }
