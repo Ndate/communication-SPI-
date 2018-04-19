@@ -1,10 +1,10 @@
 #include <msp430.h>
-#include "SPI_2553.h"
+#include "spi.h"
 
-int val = 0;
-#define SCK         BIT4            // Serial Clock
-#define DATA_OUT    BIT1            // DATA out
-#define DATA_IN     BIT2            // DATA in
+
+#define SCK         BIT5            // Serial Clock
+#define DATA_OUT    BIT6            // DATA out
+#define DATA_IN     BIT7            // DATA in
 #define CMDLEN  10
 
 
@@ -56,6 +56,13 @@ void init_USCI( void )
     P1SEL2 |= ( SCK | DATA_OUT | DATA_IN);
 
     UCB0CTL1 &= ~UCSWRST;                                // activation USCI
+
+    P1DIR |= BIT6; // la LED verte en sortie
+    P1OUT &= ~BIT6;
+
+
+
+
 }
 
 
@@ -64,11 +71,19 @@ void init_USCI( void )
  *
  * Elle permet d'envoyer un caractère pour le Slave - MSP430G2231 via la communication SPI
  ********************************************************************************************************/
-void Send_char_SPI(unsigned char carac)
+void Send_char_SPI(void)
 {
-    unsigned char cmd[CMDLEN];  // tableau de caracteres lie a la commande user
+    int val;
     while ((UCB0STAT & UCBUSY));   // attend que USCI_SPI soit dispo.
+    while (val = UCB0RXBUF)
+        {
+            P1OUT |= BIT6;
+        }
+
     while(!(IFG2 & UCB0TXIFG)); // p442
-    UCB0TXBUF = 0xAA;              // Put character in transmit buffer
-    envoi_msg_UART((unsigned char *)cmd);	// slave echo
+    while (UCB0TXBUF = val)
+        {
+            P1OUT &= ~BIT6;              // while Putting character in transmit buffer green LED Off
+        }
+
 }
