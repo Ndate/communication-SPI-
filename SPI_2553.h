@@ -8,7 +8,7 @@
 #ifndef SPI_2553_H_
 #define SPI_2553_H_
 
-void Send_char_SPI( unsigned char );
+void Send_char_SPI();
 
 void init_USCI( void );
 
