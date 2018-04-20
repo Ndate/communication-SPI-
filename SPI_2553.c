@@ -1,5 +1,6 @@
 #include <msp430.h>
 #include "spi.h"
+#include "moteur.h"
 
 
 #define SCK         BIT5            // Serial Clock
@@ -75,15 +76,19 @@ void Send_char_SPI(void)
 {
     int val;
     while ((UCB0STAT & UCBUSY));   // attend que USCI_SPI soit dispo.
-    while (val = UCB0RXBUF)
+    while(!(IFG2 & UCB0TXIFG)); // p442
+    val = UCA0RXBUF;
+    UCA0TXBUF = val;
+    if (val = UCB0RXBUF)
         {
             P1OUT |= BIT6;
+            ch_move_right(70);
+            ch_move(70);
         }
 
-    while(!(IFG2 & UCB0TXIFG)); // p442
-    while (UCB0TXBUF = val)
+    if (UCB0TXBUF = val)
         {
-            P1OUT &= ~BIT6;              // while Putting character in transmit buffer green LED Off
+            P1OUT &= ~BIT6;              // while Putting variable in transmit buffer green LED Off
         }
 
 }
