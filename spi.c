@@ -1,6 +1,6 @@
 #include <msp430.h>
 #include "spi.h"
-#include "moteur.h"
+//#include "moteur.h"
 
 
 #define SCK         BIT5            // Serial Clock
@@ -41,7 +41,7 @@ void init_USCI( void )
     // UCMODE_x  x=0 -> 3-pin SPI,
     //           x=1 -> 4-pin SPI UC0STE active high,
     //           x=2 -> 4-pin SPI UC0STE active low,
-    //           x=3 -> i²c.
+    //           x=3 -> iÂ²c.
     // UCSYNC = 1 -> Mode synchrone (SPI)
     UCB0CTL0 |= ( UCMST | UCMODE_0 | UCSYNC );
     UCB0CTL0 &= ~( UCCKPH | UCCKPL | UCMSB | UC7BIT );
@@ -70,7 +70,7 @@ void init_USCI( void )
 /*********************************************************************************************************
  * Fonction Send_char_SPI
  *
- * Elle permet d'envoyer un caractère pour le Slave - MSP430G2231 via la communication SPI
+ * Elle permet d'envoyer un caractÃ¨re pour le Slave - MSP430G2231 via la communication SPI
  ********************************************************************************************************/
 void Send_char_SPI(void)
 {
@@ -82,8 +82,8 @@ void Send_char_SPI(void)
     if (val = UCB0RXBUF)
         {
             P1OUT |= BIT6;
-            ch_move_right(70);
-            ch_move(70);
+           // ch_move_right(70);
+           // ch_move(70);
         }
 
     if (UCB0TXBUF = val)
